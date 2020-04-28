@@ -1,6 +1,6 @@
 module Tracking
 
-using DataFrames: DataFrame, groupby
+using DataFrames: DataFrame, groupby, combine, select
 using Dates: Date, @dateformat_str
 using UrlDownload: urldownload
 
@@ -21,7 +21,8 @@ const DATA_BY_STATE = groupby(getdata(), :state)
 
 function propertybydate(state)
     df = DATA_BY_STATE[(state = state,)]
-    return property -> zip(df.date, df[Symbol(property)])
+    return property -> select(df, :date, Symbol(property))
 end # function propertybydate
+propertybydate() = property -> combine(Symbol(property) => sum, DATA_BY_DATE)
 
 end # module Tracking
