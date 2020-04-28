@@ -58,12 +58,16 @@ end # function _diffyesterday
 
 dailyincrease(arg...) = property -> _diffyesterday(dailyproperty(arg...)(property))
 
-function plotproperty(arg...)
+function _plot(f, arg...)
     function (property)
         plotlyjs()
-        data = dailyproperty(arg...)(property)
+        data = f(arg...)(property)
         plot(data[:, 1], data[:, 2])
     end # function
-end # function plotproperty
+end # function _plot
+
+plotdaily(arg...) = _plot(dailyproperty, arg...)
+
+plotincrease(arg...) = _plot(dailyincrease, arg...)
 
 end # module Tracking
