@@ -5,7 +5,7 @@ using Dates: Date, @dateformat_str
 using Plots
 using UrlDownload: urldownload
 
-export getdata, dailyproperty, allproperties, dailyincrease, plotproperty
+export getdata, dailyproperty, allproperties, dailyincrease, plotdaily, plotincrease
 
 const URL = "https://covidtracking.com/api/v1/states/daily.csv"
 
