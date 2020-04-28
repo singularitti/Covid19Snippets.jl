@@ -2,9 +2,10 @@ module Tracking
 
 using DataFrames: DataFrame, groupby, combine, select
 using Dates: Date, @dateformat_str
+using Plots
 using UrlDownload: urldownload
 
-export getdata, dailyproperty, allproperties, dailyincrease
+export getdata, dailyproperty, allproperties, dailyincrease, plotproperty
 
 const URL = "https://covidtracking.com/api/v1/states/daily.csv"
 
@@ -55,7 +56,14 @@ function _diffyesterday(data)
     return df
 end # function _diffyesterday
 
-dailyincrease(state) = property -> _diffyesterday(dailyproperty(state)(property))
-dailyincrease() = property -> _diffyesterday(dailyproperty()(property))
+dailyincrease(arg...) = property -> _diffyesterday(dailyproperty(arg...)(property))
+
+function plotproperty(arg...)
+    function (property)
+        plotlyjs()
+        data = dailyproperty(arg...)(property)
+        plot(data[:, 1], data[:, 2])
+    end # function
+end # function plotproperty
 
 end # module Tracking
