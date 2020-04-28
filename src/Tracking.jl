@@ -4,7 +4,7 @@ using DataFrames: DataFrame, groupby, combine, select
 using Dates: Date, @dateformat_str
 using UrlDownload: urldownload
 
-export getdata, dailyproperty, allproperties
+export getdata, dailyproperty, allproperties, dailyincrease
 
 const URL = "https://covidtracking.com/api/v1/states/daily.csv"
 
@@ -45,10 +45,17 @@ allproperties() = (
     :totalTestResultsIncrease,
 )
 
-function dailyproperty(state)
-    df = DATA_BY_STATE[(state = state,)]
-    return property -> select(df, :date, Symbol(property))
-end # function dailyproperty
+dailyproperty(state) =
+    property -> select(DATA_BY_STATE[(state = state,)], :date, Symbol(property))
 dailyproperty() = property -> combine(Symbol(property) => sum, DATA_BY_DATE)
+
+function _diffyesterday(data)
+    df = data[2:end, :]
+    df[:, 2] = diff(data[:, 2])
+    return df
+end # function _diffyesterday
+
+dailyincrease(state) = property -> _diffyesterday(dailyproperty(state)(property))
+dailyincrease() = property -> _diffyesterday(dailyproperty()(property))
 
 end # module Tracking
