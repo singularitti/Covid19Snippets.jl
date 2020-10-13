@@ -53,7 +53,7 @@ function _diffyesterday(data)
     return df
 end # function _diffyesterday
 
-dailyincrease(arg...) = property -> _diffyesterday(dailyproperty(arg...)(property))
+dailyincrease(args...) = property -> _diffyesterday(dailyproperty(args...)(property))
 
 function _plot(f, args...)
     function (property)
