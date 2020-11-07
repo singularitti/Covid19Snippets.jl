@@ -2,7 +2,7 @@ module Tracking
 
 using DataFrames: DataFrame, groupby, combine, select
 using Dates: Date, @dateformat_str
-using Plots
+using Plots: plot
 using UrlDownload: urldownload
 
 export getdata, dailyproperty, allproperties, dailyincrease, plotdaily, plotincrease
@@ -44,7 +44,8 @@ allproperties() = (
 )
 
 dailyproperty(state) =
-    property -> select(groupby(getdata(), :state)[(state = state,)], :date, Symbol(property))
+    property ->
+        select(groupby(getdata(), :state)[(state = state,)], :date, Symbol(property))
 dailyproperty() = property -> combine(Symbol(property) => sum, groupby(getdata(), :date))
 
 function _diffyesterday(data)
