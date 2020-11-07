@@ -13,7 +13,7 @@ function getdata()
     df = urldownload(URL) |> DataFrame
     df.date = @. df.date |> string |> parsedate
     return sort(df, :date)
-end # function getdata
+end
 
 parsedate(str::AbstractString) = Date(str, dateformat"yyyymmdd")
 
@@ -57,14 +57,13 @@ dailyincrease(args...) = property -> _diffyesterday(dailyproperty(args...)(prope
 
 function _plot(f, args...)
     function (property)
-        plotlyjs()
         data = f(args...)(property)
         plot(data[:, 1], data[:, 2])
-    end # function
-end # function _plot
+    end
+end
 
 plotdaily(args...) = _plot(dailyproperty, args...)
 
 plotincrease(args...) = _plot(dailyincrease, args...)
 
-end # module Tracking
+end
